@@ -11,11 +11,16 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+            serviceImplementation="com.vw2.filewatcher.CommandSettings"/>
         <notificationGroup
             id="File Watcher Commands"
             displayType="BALLOON"/>
     </extensions>
 
-    <actions>
-    </actions>
+    <projectListeners>
+        <listener
+            class="com.vw2.filewatcher.FileWatcherPlugin"
+            topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </projectListeners>
 </idea-plugin>
