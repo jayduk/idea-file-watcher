@@ -11,6 +11,9 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup
+            id="File Watcher Commands"
+            displayType="BALLOON"/>
     </extensions>
 
     <actions>
