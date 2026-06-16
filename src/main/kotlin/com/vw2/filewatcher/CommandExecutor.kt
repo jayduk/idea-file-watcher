@@ -1,8 +1,6 @@
 package com.vw2.filewatcher
 
-import java.io.File
 import java.util.concurrent.CompletableFuture
-import java.util.function.BiConsumer
 
 class CommandExecutor {
     fun execute(command: String, callback: (output: String?, error: String?) -> Unit) {
