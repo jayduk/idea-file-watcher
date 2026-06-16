@@ -1,0 +1,18 @@
+<idea-plugin>
+    <id>com.vw2.plugins.file-watcher</id>
+    <name>File Watcher</name>
+    <vendor>VW2 Plugins</vendor>
+
+    <description><![CDATA[
+        Monitors build file changes and shows notification buttons to execute shell commands.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <actions>
+    </actions>
+</idea-plugin>
