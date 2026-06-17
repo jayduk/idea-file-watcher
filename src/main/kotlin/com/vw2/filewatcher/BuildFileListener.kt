@@ -93,14 +93,15 @@ class BuildFileListener(
             ) {
                 FileWatcherLogger.info("Executing command: $command, WorkDir: $workDir")
                 val executor = CommandExecutor()
-                executor.execute(command, workDir) { output, error ->
-                    if (output != null && output.isNotBlank()) {
-                        FileWatcherLogger.info("Command output: $output")
+                executor.execute(command, workDir) { result: CommandExecutionResult ->
+                    if (result.output != null && result.output.isNotBlank()) {
+                        FileWatcherLogger.info("Command output: ${result.output}")
                     }
-                    if (error != null && error.isNotBlank()) {
-                        FileWatcherLogger.warn("Command stderr: $error")
+                    if (result.error != null && result.error.isNotBlank()) {
+                        FileWatcherLogger.warn("Command stderr: ${result.error}")
                     }
-                    FileWatcherLogger.info("Command completed")
+                    FileWatcherLogger.info("Command completed with exit code: ${result.exitCode}")
+                    CommandNotification.showResultNotification(project, command, result)
                 }
             }
             FileWatcherLogger.info("Notification shown successfully")

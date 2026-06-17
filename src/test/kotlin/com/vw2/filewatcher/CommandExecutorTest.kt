@@ -68,4 +68,35 @@ class CommandExecutorTest {
         latch.await(5, TimeUnit.SECONDS)
         assertEquals("hello", result.get()?.trim())
     }
+
+    @Test
+    fun `should return zero exit code for successful command`() {
+        val executor = CommandExecutor()
+        val result = AtomicReference<CommandExecutionResult>()
+        val latch = CountDownLatch(1)
+
+        executor.execute("echo hello") { executionResult ->
+            result.set(executionResult)
+            latch.countDown()
+        }
+
+        latch.await(5, TimeUnit.SECONDS)
+        assertEquals(0, result.get()?.exitCode)
+        assertEquals("hello", result.get()?.output?.trim())
+    }
+
+    @Test
+    fun `should return nonzero exit code for failed command`() {
+        val executor = CommandExecutor()
+        val result = AtomicReference<CommandExecutionResult>()
+        val latch = CountDownLatch(1)
+
+        executor.execute("exit /b 7") { executionResult ->
+            result.set(executionResult)
+            latch.countDown()
+        }
+
+        latch.await(5, TimeUnit.SECONDS)
+        assertEquals(7, result.get()?.exitCode)
+    }
 }
