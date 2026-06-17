@@ -17,6 +17,8 @@ class CommandSettings : PersistentStateComponent<CommandSettings> {
         "build.gradle.kts" to "gradle build",
         "package.json" to "npm install"
     )
+    var fileCommands: MutableMap<String, String> = mutableMapOf()
+    var workDirs: MutableMap<String, String> = mutableMapOf()
 
     override fun getState(): CommandSettings = this
 
@@ -28,6 +30,59 @@ class CommandSettings : PersistentStateComponent<CommandSettings> {
 
     fun setCommand(fileName: String, command: String) {
         commands[fileName] = command
+    }
+
+    fun getCommandForFile(filePath: String): String? {
+        val normalized = normalizePath(filePath)
+        for ((key, value) in fileCommands) {
+            if (normalizePath(key) == normalized) {
+                return value
+            }
+        }
+        return null
+    }
+
+    fun getWorkDirForFile(filePath: String): String? {
+        val normalized = normalizePath(filePath)
+        for ((key, value) in workDirs) {
+            if (normalizePath(key) == normalized) {
+                return value
+            }
+        }
+        return null
+    }
+
+    fun setCommandForFile(filePath: String, command: String) {
+        fileCommands[filePath] = command
+    }
+
+    fun setWorkDirForFile(filePath: String, workDir: String) {
+        workDirs[filePath] = workDir
+    }
+
+    fun addFileCommand(filePath: String, command: String, workDir: String = "") {
+        fileCommands[filePath] = command
+        if (workDir.isNotBlank()) {
+            workDirs[filePath] = workDir
+        }
+    }
+
+    fun removeFileCommand(filePath: String) {
+        val normalized = normalizePath(filePath)
+        fileCommands.keys.firstOrNull { normalizePath(it) == normalized }?.let { fileCommands.remove(it) }
+        workDirs.keys.firstOrNull { normalizePath(it) == normalized }?.let { workDirs.remove(it) }
+    }
+
+    private fun normalizePath(path: String): String {
+        val slashNormalized = path.trim().replace('\\', '/')
+        val withoutTrailingSlash =
+            if (slashNormalized.length > 3) slashNormalized.trimEnd('/') else slashNormalized
+
+        return if (withoutTrailingSlash.matches(Regex("^[A-Za-z]:/.*"))) {
+            withoutTrailingSlash.lowercase()
+        } else {
+            withoutTrailingSlash
+        }
     }
 
     companion object {

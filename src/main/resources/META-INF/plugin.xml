@@ -16,6 +16,10 @@
         <notificationGroup
             id="File Watcher Commands"
             displayType="BALLOON"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.vw2.filewatcher.FileWatcherConfigurable"
+            displayName="File Watcher Commands"/>
     </extensions>
 
     <projectListeners>

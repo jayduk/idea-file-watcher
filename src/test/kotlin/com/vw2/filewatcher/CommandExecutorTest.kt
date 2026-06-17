@@ -53,4 +53,19 @@ class CommandExecutorTest {
         assertNotNull(errorOutput.get())
         assertTrue(errorOutput.get()?.isNotEmpty() == true)
     }
+
+    @Test
+    fun `should execute command with workDir`() {
+        val executor = CommandExecutor()
+        val result = AtomicReference<String>()
+        val latch = CountDownLatch(1)
+
+        executor.execute("echo hello", "C:\\") { output, _ ->
+            result.set(output)
+            latch.countDown()
+        }
+
+        latch.await(5, TimeUnit.SECONDS)
+        assertEquals("hello", result.get()?.trim())
+    }
 }
